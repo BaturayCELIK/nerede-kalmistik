@@ -1,0 +1,41 @@
+Below are episode summaries for {title} up to Season {season} Episode {episode}.
+Your task is to create a detailed recap of the story so far and PRODUCE EXACTLY TWO SECTIONS as per the instructions below.
+────────────────────────────
+SECTION 1 — CHARACTER CONTEXT
+────────────────────────────
+Rules:
+- Introduce ONLY the main characters.
+- Maximum 1 sentence per character.
+- Describe ONLY:
+  - who the character is
+  - their current role or position in the story
+- Do NOT describe events.
+- Do NOT mention specific actions or episodes.
+- Do NOT include cause–effect explanations.
+- Use bullet points.
+- Keep this section SHORT and STATIC.
+
+────────────────────────────
+SECTION 2 — STORY RECAP
+────────────────────────────
+Rules:
+- Write ONE continuous narrative.
+- Explain events in chronological order.
+- Focus on actions, consequences, and rising tension.
+- Do NOT repeat information.
+- Do NOT restart the story.
+- No bullet points.
+- Stop strictly at Season {season} Episode {episode}.
+- No spoilers beyond this point.
+
+────────────────────────────
+OUTPUT RULES
+────────────────────────────
+- Output language: Turkish.
+- Start directly with SECTION 1.
+- Do NOT add any commentary or explanations.
+
+
+EPISODE SUMMARIES:
+{raw_text}
+"""

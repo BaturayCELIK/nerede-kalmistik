@@ -48,7 +48,7 @@ class TMDBClient:
         # 1. TV ID bul
         search_results = self.search_tv(title)
         tv_id = search_results[0]["id"]
-
+        print(f"BULUNAN TV ID: {tv_id}")
         # 2. TV detayları
         tv_details = self.get_tv_details(tv_id)
 
@@ -82,3 +82,47 @@ class TMDBClient:
                 })
 
         return recap
+def main():
+    client = TMDBClient()
+
+    TITLE = "Better Call Saul"   # burada istediğin diziyi değiştir
+    TARGET_SEASON = 2
+    TARGET_EPISODE = 10
+
+    print("=== TMDB RECAP DATA TEST ===")
+    print(f"Series: {TITLE}")
+    print(f"Until: Season {TARGET_SEASON}, Episode {TARGET_EPISODE}")
+    print("-----------------------------")
+
+    recap_data = client.get_recap_until(
+        title=TITLE,
+        target_season=TARGET_SEASON,
+        target_episode=TARGET_EPISODE
+    )
+
+    if not recap_data:
+        print("❌ Hiç recap verisi alınamadı")
+        return
+
+    print(f"✅ Toplam bölüm sayısı: {len(recap_data)}\n")
+
+    empty_count = 0
+
+    for item in recap_data:
+        print(f"S{item['season']}E{item['episode']} - {item['title']}")
+
+        if not item["overview"].strip():
+            print("⚠️  OVERVIEW BOŞ")
+            empty_count += 1
+        else:
+            print(item["overview"])
+
+        print("-" * 50)
+
+    print("\n=== TEST SONUCU ===")
+    print(f"Toplam bölüm: {len(recap_data)}")
+    print(f"Boş overview sayısı: {empty_count}")
+
+
+if __name__ == "__main__":
+    main()

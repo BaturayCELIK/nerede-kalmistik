@@ -25,13 +25,47 @@ class RecapService:
 
         # 3. Prompt hazırla
         prompt = f"""
-Below are episode summaries up to Season {season} Episode {episode}.
+Below are episode summaries for {title} up to Season {season} Episode {episode}.
+Your task is to create a detailed recap of the story so far and PRODUCE EXACTLY TWO SECTIONS as per the instructions below.     
 
-TASK:
-- Rewrite them into a single, coherent recap
-- Explain events step by step
-- Do NOT include spoilers beyond this point
-- Output must be in Turkish
+SECTION 1 — CHARACTER CONTEXT
+Rules:
+- Introduce ONLY the main characters.
+- Maximum 1 sentence per character.
+- Describe ONLY:
+  - who the character is
+  - their current role or position in the story
+- Do NOT describe events.
+- Do NOT mention specific actions or episodes.
+- Do NOT include cause–effect explanations.
+- Use bullet points.
+- Keep this section SHORT and STATIC.
+
+SECTION 2 — STORY RECAP
+
+Rules:
+- Write the recap as a continuous story, divided into natural paragraphs.
+- Each paragraph must focus on ONLY ONE character or character group.
+- Do NOT jump between characters within the same paragraph.
+- Early-season events must be summarized briefly.
+- Events closer to Season {season} Episode {episode} must be described in more detail.
+- Skip minor side events unless they directly affect the current situation.
+- Emphasize:
+  - turning points
+  - conflicts that are still unresolved
+  - the character’s current position at the stopping point
+- Do NOT include headings or labels.
+- End the recap with the most recent unresolved tension or decision.
+
+
+────────────────────────────
+OUTPUT RULES
+────────────────────────────
+- Output language: Turkish.
+- Start directly with SECTION 1.
+- Do NOT add any commentary or explanations.
+
+
 EPISODE SUMMARIES:
 {raw_text}
 """
