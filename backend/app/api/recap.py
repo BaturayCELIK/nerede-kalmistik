@@ -5,9 +5,9 @@ def main():
     print("=== RECAP PIPELINE TEST ===")
 
     # Sabit test verisi
-    TITLE = "Better Call Saul"
-    TARGET_SEASON = 2
-    TARGET_EPISODE = 10
+    TITLE = "Dexter"
+    TARGET_SEASON = 6
+    TARGET_EPISODE = 2
 
     service = RecapService()
 

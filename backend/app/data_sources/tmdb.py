@@ -9,49 +9,58 @@ class TMDBClient:
     BASE_URL = "https://api.themoviedb.org/3"
 
     def __init__(self):
-        self.api_key = os.getenv("TMDB_API_KEY")
-        if not self.api_key:
+        self.key = os.getenv("TMDB_API_KEY")
+
+        if not self.key:
             raise ValueError("TMDB_API_KEY bulunamadı")
 
-    def search_tv(self, query: str):
-        url = f"{self.BASE_URL}/search/tv"
-        params = {
-            "api_key": self.api_key,
-            "query": query,
-            "language": "tr-TR"
-        }
-        response = requests.get(url, params=params)
+        # v4 token mı? (JWT genelde eyJ ile başlar)
+        self.is_v4 = self.key.startswith("eyJ")
+
+        if self.is_v4:
+            self.headers = {
+                "Authorization": f"Bearer {self.key}",
+                "accept": "application/json"
+            }
+            self.params = {"language": "tr-TR"}
+        else:
+            self.headers = {}
+            self.params = {
+                "api_key": self.key,
+                "language": "tr-TR"
+            }
+
+    def _get(self, path: str, extra_params: dict | None = None):
+        url = f"{self.BASE_URL}{path}"
+        params = self.params.copy()
+
+        if extra_params:
+            params.update(extra_params)
+
+        response = requests.get(url, headers=self.headers, params=params)
         response.raise_for_status()
-        return response.json()["results"]
+        return response.json()
+
+    def search_tv(self, query: str):
+        data = self._get("/search/tv", {"query": query})
+        return data["results"]
 
     def get_tv_details(self, tv_id: int):
-        url = f"{self.BASE_URL}/tv/{tv_id}"
-        params = {
-            "api_key": self.api_key,
-            "language": "tr-TR"
-        }
-        response = requests.get(url, params=params)
-        response.raise_for_status()
-        return response.json()
+        return self._get(f"/tv/{tv_id}")
 
     def get_episode(self, tv_id: int, season: int, episode: int):
-        url = f"{self.BASE_URL}/tv/{tv_id}/season/{season}/episode/{episode}"
-        params = {
-            "api_key": self.api_key,
-            "language": "tr-TR"
-        }
-        response = requests.get(url, params=params)
-        response.raise_for_status()
-        return response.json()
+        return self._get(f"/tv/{tv_id}/season/{season}/episode/{episode}")
 
     def get_recap_until(self, title: str, target_season: int, target_episode: int):
-        # 1. TV ID bul
         search_results = self.search_tv(title)
+
+        if not search_results:
+            raise ValueError("Dizi bulunamadı")
+
         tv_id = search_results[0]["id"]
         print(f"BULUNAN TV ID: {tv_id}")
-        # 2. TV detayları
-        tv_details = self.get_tv_details(tv_id)
 
+        tv_details = self.get_tv_details(tv_id)
         recap = []
 
         for season in tv_details["seasons"]:
@@ -71,17 +80,21 @@ class TMDBClient:
             for ep in range(1, max_episode + 1):
                 data = self.get_episode(tv_id, season_number, ep)
 
-                if not data.get("overview"):
+                overview = data.get("overview", "").strip()
+                if not overview:
                     continue
 
                 recap.append({
                     "season": season_number,
                     "episode": ep,
                     "title": data["name"],
-                    "overview": data["overview"]
+                    "overview": overview
                 })
 
         return recap
+
+
+#test amaçlı main fonksiyonu
 def main():
     client = TMDBClient()
 
