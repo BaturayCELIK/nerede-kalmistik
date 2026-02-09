@@ -8,3 +8,6 @@ backend/venv/
 # Cache
 __pycache__/
 *.pyc
+INTEGRATION_GUIDE.md
+INTEGRATION_SUMMARY.md
+.github/copilot-instructions.md
